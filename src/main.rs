@@ -1,16 +1,15 @@
 //! The Amethyst Pong tutorial
 
+// Standard libraries
 use amethyst::{
+    core::transform::TransformBundle,
     prelude::*,
     renderer::{DisplayConfig, DrawFlat2D, Pipeline, RenderBundle, Stage},
     utils::application_root_dir,
 };
 
-// The game state.
-pub struct Pong;
-
-// SimpleState implements a minimal state machine
-impl SimpleState for Pong {}
+// Project libraries
+mod pong;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -25,10 +24,12 @@ fn main() -> amethyst::Result<()> {
             .with_pass(DrawFlat2D::new()),
     );
 
-    let game_data =
-        GameDataBuilder::default().with_bundle(RenderBundle::new(pipe, Some(config)))?;
+    let game_data = GameDataBuilder::default()
+        .with_bundle(RenderBundle::new(pipe, Some(config))
+                     .with_sprite_sheet_processor())?
+        .with_bundle(TransformBundle::new())?;
 
-    let mut game = Application::new("./", Pong, game_data)?;
+    let mut game = Application::new("./", pong::Pong, game_data)?;
     game.run();
 
     return Ok(());
