@@ -23,8 +23,8 @@ use amethyst::{
 // Constants
 pub const ARENA_HEIGHT: f32 = 100.0;
 pub const ARENA_WIDTH: f32 = 100.0;
-const PADDLE_HEIGHT: f32 = 16.0;
-const PADDLE_WIDTH: f32 = 4.0;
+pub const PADDLE_HEIGHT: f32 = 16.0;
+pub const PADDLE_WIDTH: f32 = 4.0;
 
 // Enumeration of sides of the game world.
 #[derive(PartialEq, Eq)]
@@ -41,8 +41,6 @@ impl SimpleState for Pong {
 	fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
 		let world = data.world;
 		let sprite_sheet = load_sprite_sheet(world);
-
-		world.register::<Paddle>();
 
 		initialize_paddles(world, sprite_sheet);
 		initialize_camera(world);
@@ -90,7 +88,7 @@ fn initialize_paddles(world: &mut World, sprite_sheet: SpriteSheetHandle) {
 
 	let sprite_render = SpriteRender { sprite_sheet: sprite_sheet.clone(), sprite_number: 0 };
 
-// Add the left paddle to the world.
+	// Add the left paddle to the world.
 	world
 		.create_entity()
 		.with(sprite_render.clone())

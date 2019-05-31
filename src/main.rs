@@ -3,6 +3,7 @@
 // Standard libraries
 use amethyst::{
 	core::transform::TransformBundle,
+	input::InputBundle,
 	prelude::*,
 	renderer::{DisplayConfig, DrawFlat2D, Pipeline, RenderBundle, Stage},
 	utils::application_root_dir,
@@ -10,12 +11,18 @@ use amethyst::{
 
 // Project libraries
 mod pong;
+mod systems;
 
 fn main() -> amethyst::Result<()> {
 	amethyst::start_logger(Default::default());
 
-	let path = format!("{}/resources/display_config.ron", application_root_dir());
-	let config = DisplayConfig::load(&path);
+	let config =
+		DisplayConfig::load(format!("{}/resources/display_config.ron", application_root_dir()));
+
+	let input_bundle = InputBundle::<String, String>::new().with_bindings_from_file(format!(
+		"{}/resources/bindings_config.ron",
+		application_root_dir()
+	))?;
 
 	// Clear the screen to IKB.
 	let pipe = Pipeline::build().with_stage(
@@ -26,7 +33,9 @@ fn main() -> amethyst::Result<()> {
 
 	let game_data = GameDataBuilder::default()
 		.with_bundle(RenderBundle::new(pipe, Some(config)).with_sprite_sheet_processor())?
-		.with_bundle(TransformBundle::new())?;
+		.with_bundle(TransformBundle::new())?
+		.with_bundle(input_bundle)?
+		.with(systems::PaddleSystem, "paddle_system", &["input_system"]);
 
 	let mut game = Application::new("./", pong::Pong, game_data)?;
 	game.run();
