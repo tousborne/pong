@@ -1,5 +1,4 @@
 indent_style = "Block"
-use_small_heuristics = "Max"
 comment_width = 100
 condense_wildcard_suffixes = true
 control_brace_style = "ClosingNextLine"

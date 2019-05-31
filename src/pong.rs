@@ -56,7 +56,11 @@ pub struct Paddle {
 
 impl Paddle {
 	fn new(side: Side) -> Paddle {
-		return Paddle { side: side, width: 1.0, height: 1.0 };
+		return Paddle {
+			side: side,
+			width: 1.0,
+			height: 1.0,
+		};
 	}
 }
 
@@ -72,7 +76,12 @@ fn initialize_camera(world: &mut World) {
 
 	world
 		.create_entity()
-		.with(Camera::from(Projection::orthographic(0.0, ARENA_WIDTH, 0.0, ARENA_HEIGHT)))
+		.with(Camera::from(Projection::orthographic(
+			0.0,
+			ARENA_WIDTH,
+			0.0,
+			ARENA_HEIGHT,
+		)))
 		.with(transform)
 		.build();
 }
@@ -86,7 +95,10 @@ fn initialize_paddles(world: &mut World, sprite_sheet: SpriteSheetHandle) {
 	left_transform.set_xyz(PADDLE_WIDTH * 0.5, y, 0.0);
 	right_transform.set_xyz(ARENA_WIDTH - PADDLE_WIDTH * 0.5, y, 0.0);
 
-	let sprite_render = SpriteRender { sprite_sheet: sprite_sheet.clone(), sprite_number: 0 };
+	let sprite_render = SpriteRender {
+		sprite_sheet: sprite_sheet.clone(),
+		sprite_number: 0,
+	};
 
 	// Add the left paddle to the world.
 	world

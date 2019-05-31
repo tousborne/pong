@@ -16,8 +16,10 @@ mod systems;
 fn main() -> amethyst::Result<()> {
 	amethyst::start_logger(Default::default());
 
-	let config =
-		DisplayConfig::load(format!("{}/resources/display_config.ron", application_root_dir()));
+	let config = DisplayConfig::load(format!(
+		"{}/resources/display_config.ron",
+		application_root_dir()
+	));
 
 	let input_bundle = InputBundle::<String, String>::new().with_bindings_from_file(format!(
 		"{}/resources/bindings_config.ron",
