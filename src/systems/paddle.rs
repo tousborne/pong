@@ -1,3 +1,5 @@
+//! System to move the paddles every frame.
+
 // Standard libraries
 use amethyst::{
 	core::Transform,
@@ -5,8 +7,13 @@ use amethyst::{
 	input::InputHandler,
 };
 
+// Project libraries
 use crate::pong::{Paddle, Side, ARENA_HEIGHT, PADDLE_HEIGHT};
 
+// Constants
+const MOVEMENT_SCALE: f32 = 1.5;
+
+// System to move the paddle.
 pub struct PaddleSystem;
 
 impl<'s> System<'s> for PaddleSystem {
@@ -16,6 +23,7 @@ impl<'s> System<'s> for PaddleSystem {
 		Read<'s, InputHandler<String, String>>,
 	);
 
+	// Move the paddle a fixed scaled amount.
 	fn run(&mut self, (mut transforms, paddles, input): Self::SystemData) {
 		for (transform, paddle) in (&mut transforms, &paddles).join() {
 			let movement = match paddle.side {
@@ -24,7 +32,7 @@ impl<'s> System<'s> for PaddleSystem {
 			};
 
 			if let Some(mv_amount) = movement {
-				let scaled_amount = 1.2 * mv_amount as f32;
+				let scaled_amount = MOVEMENT_SCALE * mv_amount as f32;
 				let paddle_y = transform.translation().y;
 
 				transform.set_y(

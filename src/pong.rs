@@ -25,6 +25,9 @@ pub const ARENA_HEIGHT: f32 = 100.0;
 pub const ARENA_WIDTH: f32 = 100.0;
 pub const PADDLE_HEIGHT: f32 = 16.0;
 pub const PADDLE_WIDTH: f32 = 4.0;
+pub const BALL_VELOCITY_X: f32 = 50.0;
+pub const BALL_VELOCITY_Y: f32 = 30.0;
+pub const BALL_RADIUS: f32 = 2.0;
 
 // Enumeration of sides of the game world.
 #[derive(PartialEq, Eq)]
@@ -42,7 +45,10 @@ impl SimpleState for Pong {
 		let world = data.world;
 		let sprite_sheet = load_sprite_sheet(world);
 
-		initialize_paddles(world, sprite_sheet);
+		world.register::<Ball>();
+
+		initialize_ball(world, &sprite_sheet);
+		initialize_paddles(world, &sprite_sheet);
 		initialize_camera(world);
 	}
 }
@@ -58,15 +64,47 @@ impl Paddle {
 	fn new(side: Side) -> Paddle {
 		return Paddle {
 			side: side,
-			width: 1.0,
-			height: 1.0,
+			width: PADDLE_WIDTH,
+			height: PADDLE_HEIGHT,
 		};
 	}
 }
 
-// The paddle is associated with the game engine and the storage type defined.
+// Define the paddle's storage as a game component.
 impl Component for Paddle {
 	type Storage = DenseVecStorage<Self>;
+}
+
+// Represents the pong ball.
+pub struct Ball {
+	pub velocity: [f32; 2],
+	pub radius: f32,
+}
+
+// Define the ball's storage as a game component.
+impl Component for Ball {
+	type Storage = DenseVecStorage<Self>;
+}
+
+// Add the initial ball sprite to the world.
+fn initialize_ball(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
+	let mut local_transform = Transform::default();
+	local_transform.set_xyz(ARENA_WIDTH * 0.5, ARENA_HEIGHT * 0.5, 0.0);
+
+	let sprite_render = SpriteRender {
+		sprite_sheet: sprite_sheet.clone(),
+		sprite_number: 1,
+	};
+
+	world
+		.create_entity()
+		.with(sprite_render)
+		.with(Ball {
+			radius: BALL_RADIUS,
+			velocity: [BALL_VELOCITY_X, BALL_VELOCITY_Y],
+		})
+		.with(local_transform)
+		.build();
 }
 
 // Add the initial cameras to the world.
@@ -86,8 +124,8 @@ fn initialize_camera(world: &mut World) {
 		.build();
 }
 
-// Add the initial paddles to the world.
-fn initialize_paddles(world: &mut World, sprite_sheet: SpriteSheetHandle) {
+// Add the initial paddles' sprites to the world.
+fn initialize_paddles(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
 	let mut left_transform = Transform::default();
 	let mut right_transform = Transform::default();
 
