@@ -13,6 +13,7 @@ use amethyst::{
 mod pong;
 mod systems;
 
+
 fn main() -> amethyst::Result<()> {
 	amethyst::start_logger(Default::default());
 

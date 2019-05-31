@@ -13,6 +13,7 @@ use crate::pong::{Paddle, Side, ARENA_HEIGHT, PADDLE_HEIGHT};
 // Constants
 const MOVEMENT_SCALE: f32 = 1.5;
 
+
 // System to move the paddle.
 pub struct PaddleSystem;
 

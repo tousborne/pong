@@ -9,10 +9,12 @@ use amethyst::{
 // Project libraries
 use crate::pong::{Ball, Paddle, Side, ARENA_HEIGHT, ARENA_WIDTH};
 
+
 // System to bounce the ball.
 pub struct BallBounceSystem;
 
 impl<'s> System<'s> for BallBounceSystem {
+	// Storage
 	type SystemData = (
 		WriteStorage<'s, Ball>,
 		ReadStorage<'s, Paddle>,
@@ -57,13 +59,10 @@ impl<'s> System<'s> for BallBounceSystem {
 	}
 }
 
+
 // Check if a ball has collided with a paddle.
 fn paddle_collision(
-	ball_x: f32,
-	ball_y: f32,
-	ball: &Ball,
-	paddle: &Paddle,
-	transform: &Transform,
+	ball_x: f32, ball_y: f32, ball: &Ball, paddle: &Paddle, transform: &Transform,
 ) -> bool {
 	let paddle_x = transform.translation().x - paddle.width * 0.5;
 	let paddle_y = transform.translation().y - paddle.height * 0.5;

@@ -29,12 +29,14 @@ pub const BALL_VELOCITY_X: f32 = 50.0;
 pub const BALL_VELOCITY_Y: f32 = 30.0;
 pub const BALL_RADIUS: f32 = 2.0;
 
+
 // Enumeration of sides of the game world.
 #[derive(PartialEq, Eq)]
 pub enum Side {
 	Left,
 	Right,
 }
+
 
 // The game state.
 pub struct Pong;
@@ -52,6 +54,7 @@ impl SimpleState for Pong {
 		initialize_camera(world);
 	}
 }
+
 
 // Represents a player controlled paddle.
 pub struct Paddle {
@@ -75,6 +78,7 @@ impl Component for Paddle {
 	type Storage = DenseVecStorage<Self>;
 }
 
+
 // Represents the pong ball.
 pub struct Ball {
 	pub velocity: [f32; 2],
@@ -85,6 +89,7 @@ pub struct Ball {
 impl Component for Ball {
 	type Storage = DenseVecStorage<Self>;
 }
+
 
 // Add the initial ball sprite to the world.
 fn initialize_ball(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
@@ -107,6 +112,7 @@ fn initialize_ball(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
 		.build();
 }
 
+
 // Add the initial cameras to the world.
 fn initialize_camera(world: &mut World) {
 	let mut transform = Transform::default();
@@ -123,6 +129,7 @@ fn initialize_camera(world: &mut World) {
 		.with(transform)
 		.build();
 }
+
 
 // Add the initial paddles' sprites to the world.
 fn initialize_paddles(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
@@ -155,6 +162,7 @@ fn initialize_paddles(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
 		.with(right_transform)
 		.build();
 }
+
 
 // Load the sprite sheets.
 fn load_sprite_sheet(world: &mut World) -> SpriteSheetHandle {
