@@ -4,7 +4,7 @@
 use amethyst::{
 	assets::{AssetStorage, Loader},
 	core::transform::Transform,
-	ecs::prelude::{Component, DenseVecStorage},
+	ecs::prelude::{Component, DenseVecStorage, Entity},
 	prelude::*,
 	renderer::{
 		Camera,
@@ -18,6 +18,7 @@ use amethyst::{
 		Texture,
 		TextureMetadata,
 	},
+        ui::{Anchor, TtfFormat, UiText, UiTransform},
 };
 
 // Constants
@@ -51,6 +52,7 @@ impl SimpleState for Pong {
 
 		initialize_ball(world, &sprite_sheet);
 		initialize_paddles(world, &sprite_sheet);
+                initialize_scoreboard(world);
 		initialize_camera(world);
 	}
 }
@@ -88,6 +90,20 @@ pub struct Ball {
 // Define the ball's storage as a game component.
 impl Component for Ball {
 	type Storage = DenseVecStorage<Self>;
+}
+
+
+// Represents the scoreboard
+#[derive(Default)]
+pub struct ScoreBoard {
+    pub score_left: i32,
+    pub score_right: i32,
+}
+
+// The UI text components that display the score
+pub struct ScoreText {
+    pub p1_score: Entity,
+    pub p2_score: Entity,
 }
 
 
@@ -161,6 +177,30 @@ fn initialize_paddles(world: &mut World, sprite_sheet: &SpriteSheetHandle) {
 		.with(Paddle::new(Side::Right))
 		.with(right_transform)
 		.build();
+}
+
+
+fn initialize_scoreboard(world: &mut World) {
+    let font = world.read_resource::<Loader>().load("font/square.ttf", TtfFormat,
+        Default::default(), (), &world.read_resource(),
+    );
+
+    let p1_transform = UiTransform::new("P1".to_string(), Anchor::TopMiddle, -50.0, -50.0, 1.0, 200.0, 50.0, 0);
+    let p2_transform = UiTransform::new("P1".to_string(), Anchor::TopMiddle, 50.0, -50.0, 1.0, 200.0, 50.0, 0);
+
+    let p1_score = world
+        .create_entity()
+        .with(p1_transform)
+        .with(UiText::new(font.clone(), "0".to_string(), [1.0, 1.0, 1.0, 1.0], 50.0))
+        .build();
+
+    let p2_score = world
+        .create_entity()
+        .with(p2_transform)
+        .with(UiText::new(font.clone(), "0".to_string(), [1.0, 1.0, 1.0, 1.0], 50.0))
+        .build();
+
+    world.add_resource(ScoreText { p1_score, p2_score });
 }
 
 
